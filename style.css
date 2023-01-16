@@ -1,4 +1,4 @@
-charset "UTF-8";
+@charset "UTF-8";
 
 /* ******************
  * CSS Variablen
@@ -65,6 +65,12 @@ charset "UTF-8";
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
     color: var(--base);
+
+    /* Footer am Ende des Viewport, wenn Seiteninhalt kleiner ist */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
  }
 
 
@@ -144,6 +150,45 @@ a:active {
 }
 
 
+/* Buttons */
+.btn,
+button,
+input[type="submit"] {
+   /* fÃ¼r alle Buttons */
+   display: inline-block;
+   text-decoration: none;
+   padding: 0 1.7em;
+   height: 50px;
+   line-height: 50px;
+   border: none;
+   font-size: 1rem;
+   font-weight: 400;
+   text-align: center;
+   cursor: pointer;
+   border-radius: 25px;
+   transition: box-shadow 250ms ease-in-out, color 250ms ease-in-out, background-color 250ms ease-in-out;
+
+   /* kÃ¶nnte man durch weitere Klassen Ã¤ndern (Bsp. ".btm-primary") */
+   background-color: var(--primary);
+   color: var(--base);
+}
+
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+   text-decoration: none;
+   box-shadow: 0 3px 6px rgba(0, 192, 255, .2);
+   color: var(--primary);
+   background-color: var(--base);
+}
+
+.btn:active,
+button:active,
+input[type="submit"]:active {
+   text-decoration: none;
+   box-shadow: inset 0 2px 5px rgba(0, 0, 0, .5);
+}
+
 /* ******************
  * LAYOUT
  */
@@ -179,20 +224,24 @@ a:active {
     background-color: var(--navbar-bg);
 }
 
+/* Container */
 #navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
 }
 
 #brand {
-    height: 30px;
+   height: 30px;
 }
 
 #brand img {
-    height: 100%;
-}
+   height: 100%; /* Da Logo .svg, wird es proportional skaliert */
 
+   /* FÃ¼r Pixelgrafik (.jpg, .png): */
+   width: auto;
+   max-width: unset;
+}
 
 /* Menu Toggle */
 #nav-button {
@@ -250,34 +299,122 @@ a:active {
     transform: rotate(45deg);
 }
 
-
-.nav-menu,
-.sub-menu {
-    margin: 0;
-padding: 0;
-list-style-type: none;
+#nav-toggle:checked ~ #nav-main {
+   opacity: 1;
+   pointer-events: all;
 }
 
 
+/* Main-Menu */
+.nav-menu,
+.sub-menu {
+   margin: 0;
+   padding: 0;
+   list-style-type: none;
+}
+
 #nav-main {
-    position: fixed;
-    top: 60px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: var(--navbar-bg);
-    text-align: center;
-    
+   position: fixed;
+   top: 60px;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   background-color: var(--navbar-bg);
+   text-align: center;
+   overflow-y: auto;
+   padding: 2em 0;
+   opacity: 0;
+   pointer-events: none;
+}
+
+.js #nav-main {
+   transition: opacity 200ms linear;
 }
 
 #nav-main a {
-    text-decoration: none;
-    display: block;
-    color: var(--base);
-    padding: .75em;
+   text-decoration: none;
+   display: block;
+   color: var(--base);
+   font-weight: 400;
+   padding: 0.75em;
+}
+
+#nav-main > li > a {
+   font-size: 1.765em;
+   line-height: 60px;
+   padding: 0 0.75em;
+}
+
+#nav-main .current-menu-item > a {
+   color: var(--primary);
 }
 
 
+/* ******************
+ * Main - Haupinhalt
+ */
+
+ #content {
+   width: 100%;
+ }
+
+
+ /* Header */
+ .header-media-text {
+   padding: 2em 0;
+   text-align: center;
+ }
+
+ .header-media-text .name {
+   color: var(--primary);
+ }
+
+ .header-media-text .work {
+   display: block;
+   font-size: 1rem;
+   font-weight: 300;
+   margin-top: .3em;
+ }
+
+
+ /* Services */
+
+.service {
+   display: flex;
+   align-items: center;
+   position: relative;
+}
+
+.service-icon {
+   width: 110px;
+   height: 110px;
+   border-radius: 50%;
+   background-color: var(--secondary);
+   font-size: 2em;
+   color: var(--primary);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.service-title {
+   transform: translateX(-20px);
+   font-size: 1.176em;
+   transition: transform 250ms linear;
+}
+
+.service a {
+   display: block;
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom:0;
+   left: 0;
+}
+
+.service:hover .service-title {
+   transform: translateX(0);
+}
 
 
 /* ******************
@@ -288,7 +425,8 @@ list-style-type: none;
 .screen-reader-text {
     border: 0;
     clip: rect(1px, 1px, 1px, 1px);
-    clip-path: inset(50%);
+    -webkit-clip-path: inset(50%);
+            clip-path: inset(50%);
     height: 1px;
     margin: -1px;
     overflow: hidden;
@@ -301,7 +439,8 @@ list-style-type: none;
   .screen-reader-text:focus {
     background-color: #eee;
     clip: auto !important;
-    clip-path: none;
+    -webkit-clip-path: none;
+            clip-path: none;
     color: #444;
     display: block;
     font-size: 1em;
@@ -314,3 +453,94 @@ list-style-type: none;
     width: auto;
     z-index: 100000; /* Above WP toolbar. */
   }
+
+
+/*Media Queries*/
+
+
+/* Tablet */
+@media screen and (min-width: 768px) {
+
+    .container {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    
+    .columns {
+        display: flex;
+        gap: 15px;
+    }
+
+    .columns.reverse {
+        flex-direction: row-reverse;
+    }
+
+    .columns > .column {
+        flex-grow: 1;
+        flex-basis: 0;
+    }
+
+    .header-text {
+        text-align: left;
+    }
+
+    /*service*/
+    .service {
+        background-color: var(--secondary);
+        border-radius: 12px;
+        flex-direction: column;
+        padding: 2rem 1rem;
+        transition: box-shadow 250ms linear;
+    }
+
+    .service-icon {
+        background-color: var(--base-bg);
+        width: 120px;
+        height: 120px;
+        font-size: 4em;
+    }
+
+    .service-icon [class*="icon-"] {
+        transform: translateX(-50%) translateY(-50%);
+        transition: transform 250ms linear;
+
+    }
+
+
+
+    .service-title {
+        transform: translateX(0);
+    }
+
+    .service:hover {
+        box-shadow: 0 3px 6px rgba(255, 255, 255, .4);
+    }
+
+    .service:hover [class*="icon-"]{
+        transform: translateX(0) translateY(0);
+    }
+
+
+/* Large Screen */
+@media screen and (min-width: 1200px) {
+
+
+}
+
+
+/*Navigation*/
+@media screen and (min-width: 820px) {
+
+    body {
+        padding-top: 100px;
+    }
+
+    #navbar {
+        height: 100px;
+    }
+
+    .header-media-text {
+        min-height: calc(100vh - 100px);
+        align-items: center;
+    }
+}}
